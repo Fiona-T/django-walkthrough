@@ -8,5 +8,22 @@
 </head>
 <body>
     <h1>Things I need to do</h1>
+    <table>
+        <!-- iterate through query set items, display in each row: name, struck out if done is True-->
+        {% for item in items %}
+            <tr>
+                {% if item.done %}
+                    <td><strike>{{ item.name }}</strike></td>
+                {% else %}
+                <td>{{ item.name }}</td>
+                {% endif %}
+            </tr>
+        <!-- empty displays the below if there is nothing in the table -->
+        {% empty %}
+            <td>
+                <tr>You have no tasks.</tr>
+            </td>
+        {% endfor %}
+    </table>
 </body>
 </html>
