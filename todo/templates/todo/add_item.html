@@ -11,18 +11,8 @@
     <form method="POST" action="add">
         <!-- token added when submitting, to gtee info we are posting is coming from here and not another site -->
         {% csrf_token %}
-        <div>
-            <p>
-                <label for="id_name">Name:</label>
-                <input type="text" id="id_name" name="item_name">
-            </p>
-        </div>
-        <div>
-            <p>
-                <label for="id_done">Done:</label>
-                <input type="checkbox" id="id_done" name="done">
-            </p>
-        </div>
+        <!-- render the form passed in from views. (as_p added for styling)-->
+        {{ form.as_p }}
         <div>
             <p>
                 <button type="submit">Add Item</button>
