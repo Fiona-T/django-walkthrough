@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from .models import Item
 from .forms import ItemForm
 
@@ -34,3 +34,27 @@ def add_item(request):
         'form': form
     }
     return render(request, 'todo/add_item.html', context)
+
+
+def edit_item(request, item_id):
+    # get a copy of the item from db
+    item = get_object_or_404(Item, id=item_id)
+    # if POST request, means it is Uptdate Item form
+    if request.method == 'POST':
+        # instance of form with data in POST request
+        form = ItemForm(request.POST, instance=item)
+        # call the is_valid method on the form - Django compares
+        # data in form with data required on the model
+        if form.is_valid():
+            form.save()
+            # redirect user to home page
+            return redirect('get_todo_list')
+    # create instance of form class (from forms.py) to render form
+    # prepopulate the form using instance equal to item variable above,
+    # i.e. the info retrieved from db
+    form = ItemForm(instance=item)
+    # context contains the form, passing this to render below
+    context = {
+        'form': form
+    }
+    return render(request, 'todo/edit_item.html', context)
