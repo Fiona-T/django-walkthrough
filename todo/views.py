@@ -66,4 +66,14 @@ def toggle_item(request, item_id):
     # update the item's done status to the opposite of what it was
     item.done = not item.done
     item.save()
+    # no template to render for this, just return to home page
+    return redirect('get_todo_list')
+
+
+def delete_item(request, item_id):
+    # get a copy of the item from db
+    item = get_object_or_404(Item, id=item_id)
+    # delete the item
+    item.delete()
+    # no template to render for this, just return to home page
     return redirect('get_todo_list')
