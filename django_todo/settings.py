@@ -14,6 +14,10 @@ from pathlib import Path
 import dj_database_url
 import os
 
+# if there is an environment variable of DEVELOPMENT, then this variable
+# will be set to its value, otherwise it will be set to False
+development = os.environ.get('DEVELOPMENT', False)
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -25,9 +29,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'django-insecure-wcpg_%xwm1onw)791_6-ur9_o--lntxp-6cjw=6^#jps*3m1ql')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# amended DEBUG to equal development - will be True in gitpod and false in Heroku
+DEBUG = development
 
-ALLOWED_HOSTS = [os.environ.get('HEROKU_HOSTNAME')]
+if development:
+    ALLOWED_HOSTS = ['localhost']
+else:
+    ALLOWED_HOSTS = [os.environ.get('HEROKU_HOSTNAME')]
 
 
 # Application definition
@@ -76,16 +84,18 @@ WSGI_APPLICATION = 'django_todo.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / 'db.sqlite3',
-#     }
-# }
-
-DATABASES = {
-    'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
-}
+if development:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    # Heroku add-on Postgres db
+    DATABASES = {
+        'default': dj_database_url.parse(os.environ.get('DATABASE_URL'))
+    }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
